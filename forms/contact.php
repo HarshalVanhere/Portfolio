@@ -2,17 +2,17 @@
 
   $receiving_email_address = 'harshalvanhere@gmail.com';
 
-  // Check if the form was submitted
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate and sanitize input data
-    $from_name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-    $from_email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-    $subject = filter_input(INPUT_POST, 'subject', FILTER_SANITIZE_STRING);
-    $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
+    $from_name = htmlspecialchars(strip_tags(trim($_POST['name'])));
+    $from_email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+    $subject = htmlspecialchars(strip_tags(trim($_POST['subject'])));
+    $message = htmlspecialchars(strip_tags(trim($_POST['message'])));
 
     if (!$from_name || !$from_email || !$subject || !$message) {
-      die('Invalid input.');
+      echo "Invalid input. Please ensure all fields are filled out correctly.";
+      exit;
     }
 
     // Create email headers
@@ -32,7 +32,8 @@
       echo "Failed to send your message. Please try again later.";
     }
   } else {
-    die('Invalid request method.');
+    echo 'Invalid request method.';
+    exit;
   }
 
 ?>
